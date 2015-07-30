@@ -7,14 +7,13 @@ import simulator.model.Depot;
 public class Simulation {
 	
 	public void start() {
-		CoordinationUnit cu = new CoordinationUnit();
-		cu.init();
+		CoordinationUnit.init(2,5,0);
 		
 		Customer c1 = new Customer(32,33);
-		c1.demandPackage();
+		CoordinationUnit.createCustomerDemand(c1);
 		
-		Customer c2 = new Customer(44,56);
-		c2.demandPackage();
+		Customer c2 = new Customer(45,60);
+		CoordinationUnit.createCustomerDemand(c2);
 		
 	}
 }

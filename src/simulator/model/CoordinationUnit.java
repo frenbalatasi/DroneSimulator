@@ -4,54 +4,67 @@ import java.util.ArrayList;
 
 public class CoordinationUnit {
 	
-	public final static Depot[] DEPOTSLIST = new Depot[2];
-	public final static Drone[] DRONESLIST = new Drone[10];
-	public final static Drone[] DRONELIST_DEPOT1 = new Drone[5];
-	public final static Drone[] DRONELIST_DEPOT2 = new Drone[5];
+	private final static ArrayList<Depot> DEPOTSLIST = new ArrayList<Depot>();
+	private static ArrayList<Drone> dronesList = new ArrayList<Drone>();
+	private static ArrayList<Customer> customersList= new ArrayList<Customer>();
+	private static Depot selectedDepot;
+	private static Drone selectedDrone;
+	private static int algorithmNumber;
 	
-	private Depot selectedDepot;
-	private Drone selectedDrone;
-	
-	public void init() {
-		DEPOTSLIST[0] = new Depot(2,3);
-		DEPOTSLIST[1] = new Depot(1,1);
+	public static void init(int numberOfDepots, int numberOfDronesForEachDepot, int algoNumber) {
+		algorithmNumber = algoNumber;
 		
-		DRONESLIST[0]= new Drone(1, 1, 1, DEPOTSLIST[0]);
-		DRONESLIST[1] = new Drone(1, 1, 2, DEPOTSLIST[0]);
-		DRONESLIST[2] = new Drone(1, 1, 3, DEPOTSLIST[0]);
-		DRONESLIST[3] = new Drone(1, 1, 4, DEPOTSLIST[0]);
-		DRONESLIST[4] = new Drone(1, 1, 5, DEPOTSLIST[0]);
+		for (int i = 0; i < numberOfDepots; i++) {
+			DEPOTSLIST.add(i, new Depot(2,3));
+		}
 		
-		DRONELIST_DEPOT1[0] = DRONESLIST[0];
-		DRONELIST_DEPOT1[1] = DRONESLIST[1];
-		DRONELIST_DEPOT1[2] = DRONESLIST[2];
-		DRONELIST_DEPOT1[3] = DRONESLIST[3];
-		DRONELIST_DEPOT1[4] = DRONESLIST[4];
-		
-		DRONESLIST[5] = new Drone(1, 1, 6, DEPOTSLIST[1]);
-		DRONESLIST[6] = new Drone(1, 1, 7, DEPOTSLIST[1]);
-		DRONESLIST[7] = new Drone(1, 1, 8, DEPOTSLIST[1]);
-		DRONESLIST[8] = new Drone(1, 1, 9, DEPOTSLIST[1]);
-		DRONESLIST[9] = new Drone(1, 1, 10, DEPOTSLIST[1]);
-		
-		DRONELIST_DEPOT1[5] = DRONESLIST[5];
-		DRONELIST_DEPOT1[6] = DRONESLIST[6];
-		DRONELIST_DEPOT1[7] = DRONESLIST[7];
-		DRONELIST_DEPOT1[8] = DRONESLIST[8];
-		DRONELIST_DEPOT1[9] = DRONESLIST[9];
-		
-		DEPOTSLIST[0].attachDrones(DRONELIST_DEPOT1);
-		DEPOTSLIST[1].attachDrones(DRONELIST_DEPOT2);
-	}
-	
-	public void customerDemand() {
-		selectedDepot = depotSelection();
-		selectedDrone = selectedDepot.chooseDroneFromList();
-		selectedDrone.serveCustomer();
+		for (int i = 0; i < numberOfDepots; i++) {
+			for (int j = 0; j < numberOfDronesForEachDepot; j++) {
+				DEPOTSLIST.get(i).attachOneDrone(new Drone(j, DEPOTSLIST.get(i)));
+			}
+		}
 	}
 
-	private Depot depotSelection() {
-		return DEPOTSLIST[2];
+	public static void createCustomerDemand(Customer customer) {
+		customersList.add(customersList.size(), customer);
+		for (int i = 0; i < dronesList.size(); i++) {
+			dronesList.remove(i);
+		}
+		
+		if (customersList.size() > 2)
+		{
+			for (int i = 0; i < customersList.size(); i++) {
+				switch (algorithmNumber) {
+				case 0:
+					chooseClosestDroneWithPriorityLevel();
+					break;
+					
+				case 1:
+					chooseClosestDroneFromAuctionList();
+					break;
+				}
+				
+				selectedDrone.setCurrentlyServing(true);
+				customersList.get(i).setSatisfied(true);
+				selectedDrone.setCurrentlyServing(false);
+			}
+			
+		}
+		
 	}
 
+	private static void chooseClosestDroneWithPriorityLevel() {
+		selectedDepot = DEPOTSLIST.get(0);
+		dronesList.addAll(selectedDepot.getListOfDrones());
+		selectedDrone = dronesList.get(0);
+		
+		for (int i = 0; i < dronesList.size(); i++) {
+			if(dronesList.get(i).getPriorityLevel() > selectedDrone.getPriorityLevel())
+				selectedDrone = dronesList.get(i);
+		}
+	}
+
+	private static void chooseClosestDroneFromAuctionList() {
+		selectedDepot = DEPOTSLIST.get(0);
+	}
 }

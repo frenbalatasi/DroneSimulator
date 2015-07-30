@@ -1,12 +1,11 @@
 package simulator.model;
 
+import java.util.ArrayList;
+
 public class Depot {
 	private int longitude;
 	private int latitude;
-	private int numberOfPackages;
-	private Drone[] listOfDrones;
-	private Drone selectedDrone;
-	private CoordinationUnit cu;
+	private ArrayList<Drone> listOfDrones;
 	
 	public Depot(int longitude, int latitude) {
 		this.longitude = longitude;
@@ -21,31 +20,20 @@ public class Depot {
 		return latitude;
 	}
 	
-	public int getNumberOfPackages() {
-		return numberOfPackages;
-	}
-	
-	public int getNumberOfDrones() {
-		return listOfDrones.length;
-	}
-
-	public Drone[] getListOfDrones() {
+	public ArrayList<Drone> getListOfDrones() {
 		return listOfDrones;
 	}
 
-	public void attachDrones(Drone[] listOfDrones) {
+	public void attachListOfDrones(ArrayList<Drone> listOfDrones) {
 		this.listOfDrones = listOfDrones;
 	}
 	
-	public Drone chooseDroneFromList() {
-		selectedDrone = listOfDrones[0];
-		
-		for (int i = 0; i < listOfDrones.length; i++) {
-			if(listOfDrones[i].getPriorityLevel() > selectedDrone.getPriorityLevel())
-				selectedDrone = listOfDrones[i];
-		}
-		
-		return selectedDrone;
+	public void attachOneDrone(Drone droneToBeAttached) {
+		listOfDrones.add(listOfDrones.size(),droneToBeAttached);
+	}
+	
+	public void removeOneDrone(Drone droneToBeRemoved) {
+		listOfDrones.remove(droneToBeRemoved);
 	}
 
 }

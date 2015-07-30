@@ -3,7 +3,7 @@ package simulator.model;
 public class Customer {
 	private int longitude;
 	private int latitude;
-	private CoordinationUnit cu;
+	private Boolean isSatisfied = false;
 	
 	public Customer(int longitude, int latitude) {
 		this.longitude = longitude;
@@ -18,9 +18,11 @@ public class Customer {
 		return latitude;
 	}
 	
-	public void demandPackage() {
-		cu = new CoordinationUnit();
-		cu.customerDemand();
+	public Boolean isSatisfied() {
+		return isSatisfied;
 	}
-
+	
+	public void setSatisfied(Boolean isSatisfied) {
+		this.isSatisfied = isSatisfied;
+	}
 }
