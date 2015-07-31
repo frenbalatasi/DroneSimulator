@@ -10,10 +10,10 @@ public class Simulation {
 		CoordinationUnit.init(2,5,0);
 		
 		Customer c1 = new Customer(32,33);
-		CoordinationUnit.createCustomerDemand(c1);
+		CoordinationUnit.triggerCustomerDemand(c1);
 		
 		Customer c2 = new Customer(45,60);
-		CoordinationUnit.createCustomerDemand(c2);
+		CoordinationUnit.triggerCustomerDemand(c2);
 		
 	}
 }

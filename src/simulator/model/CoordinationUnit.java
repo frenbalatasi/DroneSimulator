@@ -25,7 +25,7 @@ public class CoordinationUnit {
 		}
 	}
 
-	public static void createCustomerDemand(Customer customer) {
+	public static void triggerCustomerDemand(Customer customer) {
 		customersList.add(customersList.size(), customer);
 		for (int i = 0; i < dronesList.size(); i++) {
 			dronesList.remove(i);
@@ -45,19 +45,27 @@ public class CoordinationUnit {
 				}
 				
 				selectedDrone.setCurrentlyServing(true);
+				selectedDepot.removeOneDrone(selectedDrone);
+				
 				customersList.get(i).setSatisfied(true);
 				selectedDrone.setCurrentlyServing(false);
+				
+				attachDroneToClosestDepot();
 			}
 			
 		}
 		
 	}
 
+	private static void attachDroneToClosestDepot() {
+		DEPOTSLIST.get(1).attachOneDrone(selectedDrone);
+	}
+
 	private static void chooseClosestDroneWithPriorityLevel() {
 		selectedDepot = DEPOTSLIST.get(0);
 		dronesList.addAll(selectedDepot.getListOfDrones());
-		selectedDrone = dronesList.get(0);
 		
+		selectedDrone = dronesList.get(0);
 		for (int i = 0; i < dronesList.size(); i++) {
 			if(dronesList.get(i).getPriorityLevel() > selectedDrone.getPriorityLevel())
 				selectedDrone = dronesList.get(i);
@@ -66,5 +74,7 @@ public class CoordinationUnit {
 
 	private static void chooseClosestDroneFromAuctionList() {
 		selectedDepot = DEPOTSLIST.get(0);
+		dronesList.addAll(selectedDepot.getListOfDrones());
+		selectedDrone = dronesList.get(0);
 	}
 }

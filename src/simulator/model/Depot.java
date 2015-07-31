@@ -35,5 +35,11 @@ public class Depot {
 	public void removeOneDrone(Drone droneToBeRemoved) {
 		listOfDrones.remove(droneToBeRemoved);
 	}
+	
+	public void removeAllDrones() {
+		for (int i = 0; i < listOfDrones.size(); i++) {
+			listOfDrones.remove(i);
+		}
+	}
 
 }
