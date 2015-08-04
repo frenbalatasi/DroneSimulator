@@ -4,77 +4,50 @@ import java.util.ArrayList;
 
 public class CoordinationUnit {
 	
-	private final static ArrayList<Depot> DEPOTSLIST = new ArrayList<Depot>();
-	private static ArrayList<Drone> dronesList = new ArrayList<Drone>();
-	private static ArrayList<Customer> customersList= new ArrayList<Customer>();
-	private static Depot selectedDepot;
-	private static Drone selectedDrone;
-	private static int algorithmNumber;
+	private ArrayList<Depot> depotsList;
+	private String algorithmName;
 	
-	public static void init(int numberOfDepots, int numberOfDronesForEachDepot, int algoNumber) {
-		algorithmNumber = algoNumber;
-		
-		for (int i = 0; i < numberOfDepots; i++) {
-			DEPOTSLIST.add(i, new Depot(2,3));
-		}
-		
-		for (int i = 0; i < numberOfDepots; i++) {
-			for (int j = 0; j < numberOfDronesForEachDepot; j++) {
-				DEPOTSLIST.get(i).attachOneDrone(new Drone(j, DEPOTSLIST.get(i)));
-			}
+	public CoordinationUnit(String algorithmName, ArrayList<Depot> depotsList) {
+		this.depotsList = depotsList;
+		this.algorithmName = algorithmName;
+	}
+	
+	public Depot selectClosestDepot(Customer customer) {
+		Depot selectedDepot = depotsList.get(0);
+		return selectedDepot;
+	}
+	
+	public Drone selectCorrespondingDrone(Depot closestDepot) {
+		switch (algorithmName) {
+			case "PriorityLevel":
+				return chooseClosestDroneWithPriorityLevel(closestDepot);
+				
+			case "AuctionList":
+				return chooseClosestDroneFromAuctionList(closestDepot);
+
+			default:
+				return closestDepot.getListOfDrones().get(0);
 		}
 	}
 
-	public static void triggerCustomerDemand(Customer customer) {
-		customersList.add(customersList.size(), customer);
-		for (int i = 0; i < dronesList.size(); i++) {
-			dronesList.remove(i);
-		}
+	private Drone chooseClosestDroneWithPriorityLevel(Depot closestDepot) {
+		ArrayList<Drone> dronesList = new ArrayList<Drone>();
+		dronesList.addAll(closestDepot.getListOfDrones());
+		Drone selectedDrone = dronesList.get(0);
 		
-		if (customersList.size() > 2)
-		{
-			for (int i = 0; i < customersList.size(); i++) {
-				switch (algorithmNumber) {
-				case 0:
-					chooseClosestDroneWithPriorityLevel();
-					break;
-					
-				case 1:
-					chooseClosestDroneFromAuctionList();
-					break;
-				}
-				
-				selectedDrone.setCurrentlyServing(true);
-				selectedDepot.removeOneDrone(selectedDrone);
-				
-				customersList.get(i).setSatisfied(true);
-				selectedDrone.setCurrentlyServing(false);
-				
-				attachDroneToClosestDepot();
-			}
-			
-		}
-		
-	}
-
-	private static void attachDroneToClosestDepot() {
-		DEPOTSLIST.get(1).attachOneDrone(selectedDrone);
-	}
-
-	private static void chooseClosestDroneWithPriorityLevel() {
-		selectedDepot = DEPOTSLIST.get(0);
-		dronesList.addAll(selectedDepot.getListOfDrones());
-		
-		selectedDrone = dronesList.get(0);
 		for (int i = 0; i < dronesList.size(); i++) {
 			if(dronesList.get(i).getPriorityLevel() > selectedDrone.getPriorityLevel())
 				selectedDrone = dronesList.get(i);
 		}
+		
+		return selectedDrone;
 	}
 
-	private static void chooseClosestDroneFromAuctionList() {
-		selectedDepot = DEPOTSLIST.get(0);
-		dronesList.addAll(selectedDepot.getListOfDrones());
-		selectedDrone = dronesList.get(0);
+	private Drone chooseClosestDroneFromAuctionList(Depot closestDepot) {
+		ArrayList<Drone> dronesList = new ArrayList<Drone>();
+		dronesList.addAll(closestDepot.getListOfDrones());
+		Drone selectedDrone = dronesList.get(0);
+		
+		return selectedDrone;
 	}
 }

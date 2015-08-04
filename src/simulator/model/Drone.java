@@ -6,13 +6,11 @@ public class Drone {
 	private int latitude;
 	private int batteryLevel;
 	private Boolean currentlyServing;
-	private Depot attachedDepot;
 	
-	public Drone(int priorityLevel, Depot attachedDepot) {
+	public Drone(int priorityLevel) {
 		setBatteryLevel(100);
 		setCurrentlyServing(false);
 		setPriorityLevel(priorityLevel);
-		setAttachedDepot(attachedDepot);
 	}
 
 	public int getPriorityLevel() {
@@ -48,13 +46,6 @@ public class Drone {
 	}
 	public void setCurrentlyServing(Boolean currentlyServing) {
 		this.currentlyServing = currentlyServing;
-	}
-	
-	public Depot getAttachedDepot() {
-		return attachedDepot;
-	}
-	public void setAttachedDepot(Depot attachedDepot) {
-		this.attachedDepot = attachedDepot;
 	}
 
 }

@@ -29,7 +29,7 @@ public class Depot {
 	}
 	
 	public void attachOneDrone(Drone droneToBeAttached) {
-		listOfDrones.add(listOfDrones.size(),droneToBeAttached);
+		listOfDrones.add(listOfDrones.size(), droneToBeAttached);
 	}
 	
 	public void removeOneDrone(Drone droneToBeRemoved) {
